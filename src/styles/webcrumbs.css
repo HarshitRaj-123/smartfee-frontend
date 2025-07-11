@@ -1,0 +1,133 @@
+@import url(https://fonts.googleapis.com/css2?family=Lato&display=swap);
+@import url(https://fonts.googleapis.com/css2?family=Open+Sans&display=swap);
+@import url(https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200);
+@import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css);
+
+/*! tailwindcss v3.4.11 | MIT License | https://tailwindcss.com*/
+*,
+:after,
+:before {
+  border: 0 solid #e5e7eb;
+  box-sizing: border-box;
+}
+:after,
+:before {
+  --tw-content: "";
+}
+:host,
+html {
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  font-family:
+    Open Sans,
+    ui-sans-serif,
+    system-ui,
+    sans-serif,
+    Apple Color Emoji,
+    Segoe UI Emoji,
+    Segoe UI Symbol,
+    Noto Color Emoji;
+  font-feature-settings: normal;
+  font-variation-settings: normal;
+  -moz-tab-size: 4;
+  tab-size: 4;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#webcrumbs {
+  font-family: Open Sans !important;
+  font-size: 16px !important;
+}
+
+#webcrumbs :is(.bg-primary-100) {
+  color: rgba(0, 0, 0, 0.9) !important;
+}
+#webcrumbs :is(.bg-primary-200) {
+  color: rgba(0, 0, 0, 0.9) !important;
+}
+
+/* Primary color definitions */
+#webcrumbs .bg-primary-50 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(233 245 255 / var(--tw-bg-opacity));
+}
+#webcrumbs .bg-primary-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(214 238 255 / var(--tw-bg-opacity));
+}
+#webcrumbs .bg-primary-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(182 221 255 / var(--tw-bg-opacity));
+}
+#webcrumbs .bg-primary-300\/20 {
+  background-color: rgba(138, 196, 255, 0.2);
+}
+#webcrumbs .bg-primary-200\/30 {
+  background-color: rgba(182, 221, 255, 0.3);
+}
+
+#webcrumbs .text-primary-600 {
+  --tw-text-opacity: 1;
+  color: rgb(20 74 255 / var(--tw-text-opacity));
+}
+#webcrumbs .text-primary-700 {
+  --tw-text-opacity: 1;
+  color: rgb(27 75 248 / var(--tw-text-opacity));
+}
+
+/* Gradient definitions */
+#webcrumbs .from-primary-100\/20 {
+  --tw-gradient-from: rgba(214, 238, 255, 0.2) var(--tw-gradient-from-position);
+  --tw-gradient-to: rgba(214, 238, 255, 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+#webcrumbs .to-primary-200\/20 {
+  --tw-gradient-to: rgba(182, 221, 255, 0.2) var(--tw-gradient-to-position);
+}
+
+#webcrumbs .from-primary-50 {
+  --tw-gradient-from: #e9f5ff var(--tw-gradient-from-position);
+  --tw-gradient-to: rgba(233, 245, 255, 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+#webcrumbs .to-primary-100 {
+  --tw-gradient-to: #d6eeff var(--tw-gradient-to-position);
+}
+
+#webcrumbs .from-primary-300 {
+  --tw-gradient-from: #8ac4ff var(--tw-gradient-from-position);
+  --tw-gradient-to: rgba(138, 196, 255, 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+#webcrumbs .from-primary-400 {
+  --tw-gradient-from: #5c9eff var(--tw-gradient-from-position);
+  --tw-gradient-to: rgba(92, 158, 255, 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+#webcrumbs .to-primary-400 {
+  --tw-gradient-to: #5c9eff var(--tw-gradient-to-position);
+}
+#webcrumbs .to-primary-500 {
+  --tw-gradient-to: #3777ff var(--tw-gradient-to-position);
+}
+
+#webcrumbs .from-primary-500 {
+  --tw-gradient-from: #3777ff var(--tw-gradient-from-position);
+  --tw-gradient-to: rgba(55, 119, 255, 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+#webcrumbs .to-primary-600 {
+  --tw-gradient-to: #144aff var(--tw-gradient-to-position);
+}
+#webcrumbs .to-primary-700 {
+  --tw-gradient-to: #1b4bf8 var(--tw-gradient-to-position);
+}
+
+#webcrumbs .hover\:from-primary-600:hover {
+  --tw-gradient-from: #144aff var(--tw-gradient-from-position);
+  --tw-gradient-to: rgba(20, 74, 255, 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+#webcrumbs .hover\:to-primary-700:hover {
+  --tw-gradient-to: #1b4bf8 var(--tw-gradient-to-position);
+} 

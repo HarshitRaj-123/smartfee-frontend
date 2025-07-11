@@ -1,0 +1,42 @@
+/* Custom Toast Styles for White Background */
+.Toastify__toast {
+    background-color: white !important;
+    color: #374151 !important;
+    border: 1px solid #E5E7EB !important;
+    border-radius: 8px !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+}
+
+.Toastify__toast--success {
+    border-color: #10B981 !important;
+}
+
+.Toastify__toast--success .Toastify__toast-icon {
+    color: #10B981 !important;
+}
+
+.Toastify__toast--error {
+    border-color: #EF4444 !important;
+}
+
+.Toastify__toast--error .Toastify__toast-icon {
+    color: #EF4444 !important;
+}
+
+.Toastify__close-button {
+    color: #6B7280 !important;
+}
+
+.Toastify__close-button:hover {
+    color: #374151 !important;
+}
+
+.Toastify__progress-bar {
+    background: linear-gradient(90deg, #10B981, #059669) !important;
+}
+
+.Toastify__progress-bar--error {
+    background: linear-gradient(90deg, #EF4444, #DC2626) !important;
+} 
