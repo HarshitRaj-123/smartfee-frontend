@@ -143,6 +143,11 @@ const userAPI = {
   // Delete user
   deleteUser: async (userId) => {
     return api.delete(`/users/${userId}`);
+  },
+
+  // Reset user password (admin)
+  resetPassword: async (userId) => {
+    return api.post(`/users/${userId}/reset-password`);
   }
 };
 

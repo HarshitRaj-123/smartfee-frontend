@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import adminAPI from '../../../services/adminAPI';
 import { useNotification } from '../../../contexts/NotificationContext';
 import LoadingSpinner from '../../../components/common/LoadingSpinner';
+import AddStudentModal from '../../../components/common/AddStudentModal';
+import ImportStudentsModal from '../../../components/admin/ImportStudentsModal';
 
 const Students = () => {
     const [students, setStudents] = useState([]);
@@ -12,6 +14,10 @@ const Students = () => {
     const [modalData, setModalData] = useState(null);
     const [modalType, setModalType] = useState(''); // 'view', 'edit', 'status'
     const [showFilters, setShowFilters] = useState(false);
+    const [showAddStudentModal, setShowAddStudentModal] = useState(false);
+    const [showImportStudentsModal, setShowImportStudentsModal] = useState(false);
+    const [editStudent, setEditStudent] = useState(null);
+    const [showEditModal, setShowEditModal] = useState(false);
     
     // Filters and pagination
     const [filters, setFilters] = useState({
@@ -139,6 +145,33 @@ const Students = () => {
         }
     };
 
+    const handleDeleteStudent = async (studentId) => {
+        if (!window.confirm('Are you sure you want to delete this student? This action cannot be undone.')) return;
+        try {
+            await adminAPI.deleteStudent(studentId);
+            addNotification('Student deleted successfully', 'success');
+            fetchStudents();
+        } catch (error) {
+            addNotification('Failed to delete student', 'error');
+        }
+    };
+
+    const handleEditStudent = (student) => {
+        setEditStudent(student);
+        setShowEditModal(true);
+    };
+
+    const handlePromoteSemester = async (student) => {
+        if (!window.confirm(`Promote ${student.firstName} ${student.lastName} to next semester?`)) return;
+        try {
+            await adminAPI.updateStudent(student._id, { currentSemester: (student.currentSemester || 1) + 1 });
+            addNotification('Student promoted to next semester', 'success');
+            fetchStudents();
+        } catch (error) {
+            addNotification('Failed to promote student', 'error');
+        }
+    };
+
     const getStatusBadge = (student) => {
         if (!student.isActive) {
             return <span className="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Blocked</span>;
@@ -212,10 +245,16 @@ const Students = () => {
                     <p className="text-gray-600">Manage student accounts and information</p>
                 </div>
                 <div className="flex gap-3">
-                    <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    <button
+                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                        onClick={() => setShowAddStudentModal(true)}
+                    >
                         Add Student
                     </button>
-                    <button className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                    <button
+                        className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+                        onClick={() => setShowImportStudentsModal(true)}
+                    >
                         Import Students
                     </button>
                 </div>
@@ -505,16 +544,16 @@ const Students = () => {
                                                 {student.firstName} {student.lastName}
                                             </div>
                                             <div className="text-sm text-gray-500">
-                                                ID: {student.studentId} | Roll: {student.rollNumber}
+                                                Admission No: {student.studentId || '—'}
                                             </div>
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="text-sm text-gray-900">
-                                            {student.courseId?.code}
+                                            {student.courseId?.code || student.courseInfo?.program_name || '—'}
                                         </div>
                                         <div className="text-sm text-gray-500">
-                                            {student.courseId?.program_name}
+                                            {student.courseId?.program_name || student.courseInfo?.branch || '—'}
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -538,7 +577,9 @@ const Students = () => {
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {student.enrollmentDate ? new Date(student.enrollmentDate).toLocaleDateString() : '—'}
+                                        {student.enrollmentDate
+                                            ? new Date(student.enrollmentDate).toLocaleDateString()
+                                            : (student.yearOfJoining ? student.yearOfJoining : '—')}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         {getStatusBadge(student)}
@@ -553,7 +594,7 @@ const Students = () => {
                                                 👁️
                                             </button>
                                             <button
-                                                onClick={() => openModal('edit', student)}
+                                                onClick={() => handleEditStudent(student)}
                                                 className="text-green-600 hover:text-green-900"
                                                 title="Edit"
                                             >
@@ -567,10 +608,18 @@ const Students = () => {
                                                 🔄
                                             </button>
                                             <button
+                                                onClick={() => handlePromoteSemester(student)}
                                                 className="text-purple-600 hover:text-purple-900"
                                                 title="Promote Semester"
                                             >
                                                 ⬆️
+                                            </button>
+                                            <button
+                                                onClick={() => handleDeleteStudent(student._id)}
+                                                className="text-red-600 hover:text-red-900"
+                                                title="Delete Student"
+                                            >
+                                                🗑️
                                             </button>
                                         </div>
                                     </td>
@@ -823,6 +872,33 @@ const Students = () => {
                     </div>
                 </div>
             )}
+            <AddStudentModal
+                isOpen={showAddStudentModal}
+                onClose={() => setShowAddStudentModal(false)}
+                onSuccess={() => {
+                    setShowAddStudentModal(false);
+                    fetchStudents();
+                }}
+                courses={courses}
+            />
+            <AddStudentModal
+                isOpen={showEditModal}
+                onClose={() => setShowEditModal(false)}
+                onSuccess={() => {
+                    setShowEditModal(false);
+                    fetchStudents();
+                }}
+                courses={courses}
+                editStudent={editStudent}
+            />
+            <ImportStudentsModal
+                isOpen={showImportStudentsModal}
+                onClose={() => setShowImportStudentsModal(false)}
+                onSuccess={() => {
+                    setShowImportStudentsModal(false);
+                    fetchStudents();
+                }}
+            />
         </div>
     );
 };

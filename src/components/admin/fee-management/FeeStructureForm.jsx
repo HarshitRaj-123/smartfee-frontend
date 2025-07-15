@@ -51,7 +51,7 @@ const FeeStructureForm = ({ open, onClose, structure, onSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
-  const { showNotification } = useNotification();
+  const { showSuccess, showError } = useNotification();
 
   // Form data
   const [formData, setFormData] = useState({
@@ -127,15 +127,16 @@ const FeeStructureForm = ({ open, onClose, structure, onSuccess }) => {
   const fetchCourses = async () => {
     try {
       const response = await adminAPI.getOrganizedCourses();
-      setCourses(response.data || []);
+      setCourses(response.data.data || []); // Fix: ensure courses is always an array
     } catch (error) {
       console.error('Error fetching courses:', error);
+      setCourses([]); // fallback to empty array
     }
   };
 
   const calculateTotals = () => {
     const baseFeeTotal = formData.baseFees.reduce((sum, fee) => sum + (fee.amount || 0), 0);
-    const serviceFeeTotal = formData.serviceFees.reduce((sum, fee) => sum + (fee.amount || 0), 0);
+    const serviceFeeTotal = formData.serviceFees.reduce((sum, fee) => sum + (Number(fee.amount) || 0), 0);
     const grandTotal = baseFeeTotal + serviceFeeTotal;
 
     setTotals({
@@ -172,20 +173,21 @@ const FeeStructureForm = ({ open, onClose, structure, onSuccess }) => {
 
   const handleServiceFeeChange = (index, field, value) => {
     const updatedFees = [...formData.serviceFees];
-    if (field.startsWith('configuration.')) {
-      const configField = field.split('.')[1];
-      updatedFees[index] = {
-        ...updatedFees[index],
-        configuration: {
-          ...updatedFees[index].configuration,
-          [configField]: value
-        }
+    if (field === 'serviceType') {
+      updatedFees[index].serviceType = value;
+      // Auto-fill name based on service type
+      const typeToName = {
+        hostel: 'Hostel Fee',
+        mess: 'Mess Fee',
+        transport: 'Transport Fee',
+        event: 'Event Fee',
+        workshop: 'Workshop Fee',
+        certification: 'Certification Fee',
+        custom: 'Custom Service'
       };
+      updatedFees[index].name = typeToName[value] || '';
     } else {
-      updatedFees[index] = {
-        ...updatedFees[index],
-        [field]: field === 'amount' ? parseFloat(value) || 0 : value
-      };
+      updatedFees[index][field] = value;
     }
     setFormData(prev => ({ ...prev, serviceFees: updatedFees }));
   };
@@ -238,7 +240,14 @@ const FeeStructureForm = ({ open, onClose, structure, onSuccess }) => {
 
       // Validation
       if (!formData.programName || !formData.branch || !formData.semester || !formData.academicSession) {
-        showNotification('Please fill in all required fields', 'error');
+        showError('Please fill in all required fields');
+        setLoading(false);
+        return;
+      }
+      // Service fee name validation
+      if (formData.serviceFees.some(fee => !fee.name || fee.name.trim() === "")) {
+        showError("All service fees must have a name.");
+        setLoading(false);
         return;
       }
 
@@ -250,24 +259,28 @@ const FeeStructureForm = ({ open, onClose, structure, onSuccess }) => {
       };
 
       if (structure) {
-        // Update existing structure
         await feeStructureAPI.updateFeeStructure(structure._id, payload);
-        showNotification('Fee structure updated successfully', 'success');
+        showSuccess('Fee structure updated successfully');
+        onSuccess(); // Close modal and refresh table
       } else {
-        // Create new structure
         await feeStructureAPI.createFeeStructure(payload);
-        showNotification('Fee structure created successfully', 'success');
+        showSuccess('Fee structure created successfully');
+        onSuccess(); // Close modal and refresh table
       }
-
-      onSuccess();
     } catch (error) {
-      showNotification(
-        error.response?.data?.message || 'Failed to save fee structure',
-        'error'
-      );
+      showError(error.response?.data?.message || 'Failed to save fee structure');
     } finally {
       setLoading(false);
     }
+  };
+
+  // Add this utility function for currency formatting
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      minimumFractionDigits: 0
+    }).format(amount);
   };
 
   const CourseSelectionTab = () => (
@@ -697,7 +710,7 @@ const FeeStructureForm = ({ open, onClose, structure, onSuccess }) => {
 
       <Box mt={2} p={2} bgcolor="grey.50" borderRadius={1}>
         <Typography variant="subtitle1" fontWeight="bold">
-          Service Fee Total: ₹{totals.serviceFeeTotal.toLocaleString()}
+          Service Fee Total: {formatCurrency(totals.serviceFeeTotal)}
         </Typography>
       </Box>
     </Box>
@@ -878,11 +891,12 @@ const FeeStructureForm = ({ open, onClose, structure, onSuccess }) => {
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={onClose} startIcon={<CancelIcon />}>
+        <Button onClick={onClose} color="secondary" disabled={loading}>
           Cancel
         </Button>
         <Button
           onClick={handleSubmit}
+          color="primary"
           variant="contained"
           startIcon={<SaveIcon />}
           disabled={loading}

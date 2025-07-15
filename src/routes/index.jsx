@@ -122,9 +122,7 @@ const PageSelector = ({ pageType }) => {
             return <UnauthorizedPage />;
             
         case 'transactions':
-            if (role === 'super_admin' || role === 'admin') {
-                return <AdminTransactionsPage />;
-            } else if (role === 'accountant') {
+            if (role === 'accountant') {
                 return <AccountantTransactionsPage />;
             } else if (role === 'student') {
                 return <StudentTransactionsPage />;
@@ -197,7 +195,11 @@ const LandingRoutes = {
 
 // Unified dashboard routes using user ID
 const DashboardRoutes = {
-    element: <ProtectedRoute layout={<DashboardLayoutAppBar />} redirectTo="/login" />,
+    element: (
+      <ProtectedRoute redirectTo="/login">
+        <DashboardLayoutAppBar />
+      </ProtectedRoute>
+    ),
     path: "/dashboard/:userId",
     children: [
         {

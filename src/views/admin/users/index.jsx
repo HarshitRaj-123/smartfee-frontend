@@ -5,6 +5,7 @@ import userAPI from '../../../services/userAPI';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../../../styles/toast.css';
+import AddUserModal from '../../../components/common/AddUserModal';
 
 // Add custom styles for white background toasts
 const customToastStyles = {
@@ -800,20 +801,15 @@ const Users = () => {
 
             {/* Simple Modals */}
             {showAddModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg p-6 w-full max-w-md">
-                        <h3 className="text-lg font-medium mb-4">Add New User</h3>
-                        <p className="text-gray-600 mb-4">Add user functionality coming soon...</p>
-                        <div className="flex justify-end gap-2">
-                            <button
-                                onClick={() => setShowAddModal(false)}
-                                className="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50"
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <AddUserModal
+                    isOpen={showAddModal}
+                    onClose={() => setShowAddModal(false)}
+                    onSuccess={() => {
+                        // Refresh the current tab's users after adding
+                        const role = activeTab === 'admins' ? 'admin' : 'accountant';
+                        fetchUsersByRole(role);
+                    }}
+                />
             )}
 
             {showEditModal && (

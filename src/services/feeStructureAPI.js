@@ -79,6 +79,17 @@ export const assignToStudents = async (id, data) => {
   }
 };
 
+// Assign all fee structures to all eligible students
+export const assignAllFeeStructures = async () => {
+  try {
+    const response = await api.post(`${BASE_URL}/assign-all`);
+    return response.data;
+  } catch (error) {
+    console.error('Error assigning all fee structures:', error);
+    throw error;
+  }
+};
+
 // Get assignment history
 export const getAssignmentHistory = async (id) => {
   try {
@@ -206,6 +217,7 @@ export default {
   updateFeeStructure,
   cloneFeeStructure,
   assignToStudents,
+  assignAllFeeStructures,
   getAssignmentHistory,
   activateFeeStructure,
   archiveFeeStructure,

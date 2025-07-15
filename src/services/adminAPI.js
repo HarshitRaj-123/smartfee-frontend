@@ -102,6 +102,11 @@ const adminAPI = {
     return api.patch(`/admin/students/${id}/status`, { action, reason });
   },
 
+  // Delete student
+  deleteStudent: async (id) => {
+    return api.delete(`/admin/students/${id}`);
+  },
+
   // Get students statistics
   getStudentsStats: async () => {
     return api.get('/admin/students/stats/overview');
@@ -123,6 +128,25 @@ const adminAPI = {
       params,
       responseType: 'blob'
     });
+  },
+
+  // Preview student import
+  previewStudentImport: async (formData) => {
+    return api.post('/admin/students/import/preview', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+  },
+
+  // Import students
+  importStudents: async (formData) => {
+    return api.post('/admin/students/import', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+  },
+
+  // Get student by admission number
+  getStudentByAdmissionNo: async (admissionNo) => {
+    return api.get(`/admin/students/by-admission/${admissionNo}`);
   }
 };
 
