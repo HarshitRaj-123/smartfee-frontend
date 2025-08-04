@@ -77,10 +77,13 @@ const Students = () => {
 
     const fetchCourses = async () => {
         try {
+            console.log('Fetching courses...');
             const response = await adminAPI.getCoursesList();
+            console.log('Courses response:', response.data);
             setCourses(response.data.data);
         } catch (error) {
             console.error('Error fetching courses:', error);
+            addNotification('Failed to fetch courses', 'error');
         }
     };
 

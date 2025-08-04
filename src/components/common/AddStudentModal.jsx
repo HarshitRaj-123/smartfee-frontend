@@ -82,10 +82,17 @@ const AddStudentModal = ({ isOpen, onClose, onSuccess, courses = [] }) => {
             if (selectedCourse) {
                 setFormData(prev => ({
                     ...prev,
-                    programName: selectedCourse.name,
-                    courseDuration: `${selectedCourse.duration} ${selectedCourse.durationType || 'Years'}`
+                    programName: selectedCourse.name || selectedCourse.program_name || '',
+                    courseDuration: selectedCourse.duration || `${selectedCourse.totalSemesters} Semesters`
                 }));
             }
+        } else {
+            // Clear the fields when no course is selected
+            setFormData(prev => ({
+                ...prev,
+                programName: '',
+                courseDuration: ''
+            }));
         }
     }, [formData.courseId, courses]);
 
@@ -485,14 +492,21 @@ const AddStudentModal = ({ isOpen, onClose, onSuccess, courses = [] }) => {
                                         }`}
                                     >
                                         <option value="">Select Course</option>
-                                        {courses.map(course => (
-                                            <option key={course._id} value={course._id}>
-                                                {course.name} ({course.code})
-                                            </option>
-                                        ))}
+                                        {courses && courses.length > 0 ? (
+                                            courses.map(course => (
+                                                <option key={course._id} value={course._id}>
+                                                    {course.name} ({course.code}) - {course.duration}
+                                                </option>
+                                            ))
+                                        ) : (
+                                            <option value="" disabled>No courses available</option>
+                                        )}
                                     </select>
                                     {validationErrors.courseId && (
                                         <p className="text-red-500 text-sm mt-1">{validationErrors.courseId}</p>
+                                    )}
+                                    {courses && courses.length === 0 && (
+                                        <p className="text-yellow-600 text-sm mt-1">Loading courses...</p>
                                     )}
                                 </div>
 
