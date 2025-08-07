@@ -190,13 +190,15 @@ const AddStudentModal = ({ isOpen, onClose, onSuccess, courses = [] }) => {
                 // Personal Information
                 firstName: formData.fullName.split(' ')[0],
                 lastName: formData.fullName.split(' ').slice(1).join(' ') || '',
-                admissionNo: formData.admissionNo,
+                admissionNumber: formData.admissionNumber, // Fixed: backend expects admissionNumber
                 gender: formData.gender,
                 dateOfBirth: formData.dateOfBirth,
                 email: formData.email,
-                phone: formData.phoneNumber,
-                guardianName: formData.guardianName,
-                guardianContact: formData.guardianContact,
+                phoneNumber: formData.phoneNumber, // Fixed: backend expects phoneNumber
+                parentDetails: {
+                    guardianName: formData.guardianName,
+                    guardianContact: formData.guardianContact
+                },
                 address: formData.address,
                 
                 // Academic Information

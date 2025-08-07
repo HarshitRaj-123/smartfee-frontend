@@ -85,6 +85,11 @@ const adminAPI = {
 
   // ========== STUDENTS MANAGEMENT ==========
   
+  // Create new student
+  createStudent: async (data) => {
+    return api.post('/admin/students', data);
+  },
+
   // Get all students with filters and pagination
   getStudents: async (params = {}) => {
     return api.get('/admin/students', { params });

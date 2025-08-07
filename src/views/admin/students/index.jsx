@@ -46,10 +46,15 @@ const Students = () => {
 
     const { addNotification } = useNotification();
 
+    // Fetch students when filters, pagination, or sort changes
     useEffect(() => {
         fetchStudents();
-        fetchCourses();
     }, [filters, pagination.current, sortConfig]);
+
+    // Fetch courses only once on component mount
+    useEffect(() => {
+        fetchCourses();
+    }, []);
 
     const fetchStudents = async () => {
         try {
